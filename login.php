@@ -34,10 +34,15 @@ if($_POST){
         $_SESSION['user_id'] = $user->id;
         $_SESSION['access_level'] = $user->access_level;
         $_SESSION['firstname'] = htmlspecialchars($user->firstname, ENT_QUOTES, 'UTF-8') ;
+        $_SESSION['middlename'] = $user->middlename;
         $_SESSION['lastname'] = $user->lastname;
         // if access level is 'Admin', redirect to admin section
         if($user->access_level=='Admin'){
             header("Location: {$home_url}admin/index.php?action=login_success");
+        }
+
+        elseif($user->access_level=='CICSSO_Admin'){
+            header("Location: {$home_url}cicsso_admin/index.php?action=login_success");
         }
         // else, redirect only to 'Customer' section
         else{
