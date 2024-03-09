@@ -22,10 +22,32 @@ if($_POST){
     // initialize objects
     $user = new User($db);
     // check if email and password are in the database
-    $user->email=$_POST['email'];
+    $user->email_address=$_POST['email_address'];
     // check if email exists, also get user details using this emailExists() method
     $email_exists = $user->emailExists();
     // login validation will be here
+
+    // validate login
+    if ($email_exists && password_verify($_POST['password'], $user->password)){
+        // if it is, set the session value to true
+        $_SESSION['logged_in'] = true;
+        $_SESSION['user_id'] = $user->id;
+        $_SESSION['access_level'] = $user->access_level;
+        $_SESSION['firstname'] = htmlspecialchars($user->firstname, ENT_QUOTES, 'UTF-8') ;
+        $_SESSION['lastname'] = $user->lastname;
+        // if access level is 'Admin', redirect to admin section
+        if($user->access_level=='Admin'){
+            header("Location: {$home_url}admin/index.php?action=login_success");
+        }
+        // else, redirect only to 'Customer' section
+        else{
+            header("Location: {$home_url}index.php?action=login_success");
+        }
+    }
+    // if username does not exist or password is wrong
+    else{
+        $access_denied=true;
+    }
 }
 
 
@@ -66,7 +88,7 @@ if($access_denied){
             echo "<div class='tab-pane active' id='login'>";
                 echo "<img class='profile-img' src='images/login-icon.png'>";
                 echo "<form class='form-signin' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "' method='post'>";
-                    echo "<input type='text' name='email' class='form-control' placeholder='Email' required autofocus />";
+                    echo "<input type='text' name='email_address' class='form-control' placeholder='Email' required autofocus />";
                     echo "<input type='password' name='password' class='form-control' placeholder='Password' required />";
                     echo "<input type='submit' class='btn btn-lg btn-primary btn-block' value='Log In' />";
                 echo "</form>";
