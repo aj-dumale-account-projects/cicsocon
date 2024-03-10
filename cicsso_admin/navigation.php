@@ -30,7 +30,6 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                         <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                           <?php echo $_SESSION['firstname']; ?>
-                          <?php echo $_SESSION['middlename']; ?>
                           <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
